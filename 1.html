@@ -1,0 +1,903 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>崽崽的Hello Kitty生日派对</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Quicksand:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            font-family: 'Quicksand', sans-serif;
+            background: linear-gradient(135deg, #fff0f5, #fff9fb, #fff0f5);
+            background-size: 200% 200%;
+            animation: gradientBG 12s ease infinite;
+            color: #8a5a7d;
+            overflow-x: hidden;
+            min-height: 100vh;
+            position: relative;
+            touch-action: manipulation;
+        }
+
+        @keyframes gradientBG {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .hello-kitty-bg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M50,30 Q55,20 65,25 Q70,35 65,40 Q60,45 55,40 Q50,35 45,40 Q40,45 35,40 Q30,35 35,25 Q45,20 50,30' fill='none' stroke='%23ffc1d6' stroke-width='0.5' opacity='0.15'/%3E%3C/svg%3E");
+            opacity: 0.3;
+            z-index: 0;
+        }
+
+        .container {
+            max-width: 100%;
+            margin: 0 auto;
+            padding: 15px;
+            position: relative;
+            z-index: 10;
+        }
+
+        /* 顶部导航 - 移动优化 */
+        header {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 15px;
+            background: rgba(255, 255, 255, 0.92);
+            border-radius: 30px;
+            margin: 10px;
+            box-shadow: 0 5px 15px rgba(186, 104, 200, 0.1);
+            border: 1px solid rgba(255, 182, 193, 0.3);
+            backdrop-filter: blur(8px);
+        }
+
+        .logo {
+            font-family: 'Dancing Script', cursive;
+            font-size: 1.8rem;
+            color: #e91e63;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+
+        .logo i {
+            color: #ff4081;
+            text-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+
+        .nav-buttons {
+            display: flex;
+            flex-wrap: nowrap;
+            gap: 10px;
+            width: 100%;
+            overflow-x: auto;
+            padding-bottom: 5px;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        .nav-buttons::-webkit-scrollbar {
+            height: 4px;
+        }
+
+        .nav-buttons::-webkit-scrollbar-thumb {
+            background: #f48fb1;
+            border-radius: 2px;
+        }
+
+        .nav-btn {
+            background: linear-gradient(135deg, #f8bbd0, #f48fb1);
+            border: none;
+            padding: 12px 20px;
+            border-radius: 50px;
+            font-size: 0.95rem;
+            font-weight: 600;
+            color: white;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            box-shadow: 0 3px 10px rgba(244, 143, 177, 0.3);
+            position: relative;
+            overflow: hidden;
+            flex-shrink: 0;
+            min-width: max-content;
+        }
+
+        .nav-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+            transition: 0.5s;
+        }
+
+        .nav-btn:hover::before, .nav-btn:active::before {
+            left: 100%;
+        }
+
+        .nav-btn:active {
+            transform: translateY(2px);
+            box-shadow: 0 2px 8px rgba(244, 143, 177, 0.3);
+        }
+
+        /* 主内容区域 */
+        .page {
+            display: none;
+            min-height: calc(100vh - 180px);
+            background: rgba(255, 253, 250, 0.96);
+            border-radius: 25px;
+            margin: 10px;
+            padding: 20px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.05);
+            position: relative;
+            overflow: hidden;
+            border: 1px solid rgba(255, 182, 193, 0.2);
+        }
+
+        .page.active {
+            display: block;
+            animation: fadeIn 0.5s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* 蛋糕页样式 - 移动优化 */
+        .cake-section {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 20px 10px;
+            position: relative;
+            z-index: 10;
+        }
+
+        .birthday-message-top {
+            font-family: 'Dancing Script', cursive;
+            font-size: 2.2rem;
+            color: #e91e63;
+            margin-bottom: 15px;
+            text-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            letter-spacing: 0.5px;
+            line-height: 1.3;
+        }
+
+        .cake-container {
+            position: relative;
+            margin: 25px 0;
+        }
+
+        .main-cake {
+            font-size: 6rem;
+            animation: dropAndBounce 1.2s ease-out forwards;
+            font-family: 'Dancing Script', cursive;
+            position: relative;
+            z-index: 5;
+            text-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .hello-kitty-badge {
+            position: absolute;
+            top: -10px;
+            right: -15px;
+            background: #ff4081;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.8rem;
+            color: white;
+            border: 3px solid white;
+            box-shadow: 0 3px 8px rgba(0, 0, 0, 0.1);
+            animation: float 4s ease-in-out infinite;
+        }
+
+        .birthday-message-bottom {
+            font-family: 'Dancing Script', cursive;
+            font-size: 1.8rem;
+            color: #d81b60;
+            line-height: 1.4;
+            max-width: 100%;
+            margin: 0 auto;
+            padding: 15px 20px;
+            background: rgba(255, 228, 236, 0.7);
+            border-radius: 20px;
+            position: relative;
+            z-index: 5;
+            border: 1px dashed #f8bbd0;
+        }
+
+        /* 祝福页样式 - 逐个展示 */
+        .wishes-section {
+            position: relative;
+            height: 75vh;
+            padding: 10px;
+            overflow: hidden;
+        }
+
+        .wish-card {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #fff9fb, #fff0f5);
+            border-radius: 25px;
+            padding: 25px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.07);
+            transition: all 0.8s cubic-bezier(0.19, 1, 0.22, 1);
+            opacity: 0;
+            transform: translateY(20px);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            border: 1px solid rgba(255, 182, 193, 0.3);
+            z-index: 1;
+        }
+
+        .wish-card.active {
+            opacity: 1;
+            transform: translateY(0);
+            z-index: 2;
+        }
+
+        .wish-card::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #f8bbd0, #f48fb1, #f06292);
+        }
+
+        .wish-icon {
+            font-size: 3rem;
+            margin-bottom: 15px;
+            animation: float 5s infinite ease-in-out;
+            color: #f06292;
+        }
+
+        .wish-text {
+            font-size: 1.1rem;
+            line-height: 1.7;
+            margin-bottom: 20px;
+            color: #6a1b9a;
+            font-weight: 500;
+            padding: 0 10px;
+        }
+
+        .highlight {
+            font-weight: bold;
+            font-size: 1.15rem;
+            color: #e91e63;
+            padding: 10px 20px;
+            background: rgba(255, 228, 236, 0.7);
+            border-radius: 15px;
+            display: inline-block;
+            border: 1px dashed #f48fb1;
+            font-family: 'Dancing Script', cursive;
+        }
+
+        /* 祝福导航 */
+        .wish-nav {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 15px;
+            z-index: 20;
+            position: relative;
+        }
+
+        .wish-nav-btn {
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #f8bbd0, #f48fb1);
+            border: none;
+            color: white;
+            font-size: 1.2rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 3px 10px rgba(244, 143, 177, 0.3);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .wish-nav-btn:active {
+            transform: scale(0.95);
+        }
+
+        /* 烟花页样式 */
+        .fireworks-section {
+            height: 75vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            background: rgba(10, 10, 25, 0.7);
+            border-radius: 25px;
+            overflow: hidden;
+        }
+
+        .birthday-message {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: white;
+            text-align: center;
+            letter-spacing: 2px;
+            text-shadow: 0 0 8px rgba(255, 255, 255, 0.8),
+                         0 0 15px rgba(255, 105, 180, 0.8);
+            margin-bottom: 20px;
+            z-index: 20;
+            font-family: 'Dancing Script', cursive;
+            padding: 0 15px;
+            line-height: 1.3;
+        }
+
+        canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 10;
+        }
+
+        /* 动画效果 */
+        @keyframes dropAndBounce {
+            0% { transform: translateY(-100vh); }
+            70% { transform: translateY(0); }
+            80% { transform: translateY(-15px); }
+            90% { transform: translateY(0); }
+            100% { transform: translateY(-5px); }
+        }
+
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+            100% { transform: translateY(0px); }
+        }
+
+        /* 装饰元素 */
+        .falling-element {
+            position: absolute;
+            font-size: 1.5rem;
+            animation: fall linear infinite;
+            z-index: 1;
+            opacity: 0.7;
+            text-shadow: 0 1px 5px rgba(0, 0, 0, 0.15);
+        }
+
+        .running-kitty {
+            position: absolute;
+            font-size: 2rem;
+            animation: runKitty linear infinite;
+            z-index: 1;
+            bottom: 5%;
+        }
+
+        @keyframes fall {
+            0% { transform: translateY(-10vh) rotate(0deg); }
+            100% { transform: translateY(110vh) rotate(360deg); }
+        }
+
+        @keyframes runKitty {
+            0% { transform: translateX(110vw); }
+            100% { transform: translateX(-30vw); }
+        }
+
+        /* 音乐控制 */
+        .music-control {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            width: 60px;
+            height: 60px;
+            background: rgba(255, 255, 255, 0.92);
+            backdrop-filter: blur(5px);
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            z-index: 100;
+            box-shadow: 0 4px 15px rgba(240, 98, 146, 0.25);
+            border: 2px solid #f8bbd0;
+            transition: all 0.3s ease;
+        }
+
+        .music-control:active {
+            transform: scale(0.95);
+            background: rgba(255, 255, 255, 1);
+            box-shadow: 0 5px 20px rgba(240, 98, 146, 0.35);
+        }
+
+        .music-control i {
+            font-size: 28px;
+            color: #e91e63;
+        }
+
+        /* 页脚 */
+        footer {
+            text-align: center;
+            padding: 20px 15px;
+            color: rgba(138, 90, 125, 0.7);
+            font-size: 1.1rem;
+            margin-top: 10px;
+            font-family: 'Dancing Script', cursive;
+        }
+
+        /* 响应式设计 - 针对iPhone 14 Pro优化 */
+        @media (max-width: 428px) {
+            .logo {
+                font-size: 1.6rem;
+            }
+            
+            .nav-btn {
+                padding: 10px 15px;
+                font-size: 0.9rem;
+            }
+            
+            .birthday-message-top {
+                font-size: 1.9rem;
+            }
+            
+            .main-cake {
+                font-size: 5rem;
+            }
+
+            .hello-kitty-badge {
+                width: 40px;
+                height: 40px;
+                font-size: 1.5rem;
+                top: -8px;
+                right: -12px;
+            }
+            
+            .birthday-message-bottom {
+                font-size: 1.5rem;
+                padding: 12px 15px;
+            }
+            
+            .wish-icon {
+                font-size: 2.5rem;
+            }
+            
+            .wish-text {
+                font-size: 1rem;
+            }
+            
+            .highlight {
+                font-size: 1rem;
+                padding: 8px 16px;
+            }
+            
+            .birthday-message {
+                font-size: 2rem;
+            }
+        }
+        
+        /* 横屏优化 */
+        @media (max-height: 500px) {
+            .page {
+                min-height: 85vh;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="hello-kitty-bg"></div>
+    
+    <!-- 音乐控制 -->
+    <div class="music-control" id="musicControl">
+        <i class="fas fa-music"></i>
+    </div>
+    
+    <!-- 顶部导航 -->
+    <header>
+        <div class="logo">
+            <i class="fas fa-crown"></i>
+            <span>崽崽的Hello Kitty生日派对</span>
+        </div>
+        <div class="nav-buttons">
+            <button class="nav-btn" data-page="page1">
+                <i class="fas fa-birthday-cake"></i> 蛋糕
+            </button>
+            <button class="nav-btn" data-page="page2">
+                <i class="fas fa-heart"></i> 祝福
+            </button>
+            <button class="nav-btn" data-page="page3">
+                <i class="fas fa-fire"></i> 烟花
+            </button>
+        </div>
+    </header>
+    
+    <div class="container">
+        <!-- 页面1：生日蛋糕 -->
+        <div class="page active" id="page1">
+            <div class="cake-section">
+                <div class="birthday-message-top">Happy Birthday, My Princess!</div>
+                <div class="cake-container">
+                    <div class="main-cake" id="mainCake">🎂</div>
+                    <div class="hello-kitty-badge">🎀</div>
+                </div>
+                <div class="birthday-message-bottom">
+                    ✨🎀 让一让，让一让 🎀✨<br>我的崽崽要过生日啦！
+                </div>
+            </div>
+        </div>
+        
+        <!-- 页面2：生日祝福 - 逐个展示 -->
+        <div class="page" id="page2">
+            <div class="wishes-section">
+                <div class="wish-card active">
+                    <div class="wish-icon">🌌</div>
+                    <div class="wish-text">愿小乖温柔浪漫，不失爱与果敢，借来星云万万与皓月同光，无需酝酿，便可摘取盛夏的怦然。</div>
+                    <div class="highlight">“生日快乐，世事常安。”</div>
+                </div>
+                
+                <div class="wish-card">
+                    <div class="wish-icon">🌠</div>
+                    <div class="wish-text">愿小乖朝朝如愿，岁岁平安，自成人间绝色，远胜万缕清风。</div>
+                    <div class="highlight">“生日快乐，旧梦常温。”</div>
+                </div>
+                
+                <div class="wish-card">
+                    <div class="wish-icon">🔥</div>
+                    <div class="wish-text">愿小乖纵失陷于世俗尘网，风火人间，亦有人为你飞关越岭赠你月明风清。</div>
+                    <div class="highlight">“生日快乐，好梦长圆。”</div>
+                </div>
+                
+                <div class="wish-card">
+                    <div class="wish-icon">🌹</div>
+                    <div class="wish-text">愿小乖一生温润，不缺月与春色，在短暂的人间里拾得长驻足的爱恋。</div>
+                    <div class="highlight">“生日快乐，长岁常安。”</div>
+                </div>
+                
+                <div class="wish-card">
+                    <div class="wish-icon">🌄</div>
+                    <div class="wish-text">愿小乖生于热烈，永不彷徨，为了一句梦想，走遍万重山岗。</div>
+                    <div class="highlight">“生日快乐，万事如意。”</div>
+                </div>
+                
+                <div class="wish-card">
+                    <div class="wish-icon">🌅</div>
+                    <div class="wish-text">愿小乖乘风破浪，离风万里，万事胜意，诸事皆宜。</div>
+                    <div class="highlight">“生日快乐。”</div>
+                </div>
+            </div>
+            <div class="wish-nav">
+                <button class="wish-nav-btn" id="prevWish">
+                    <i class="fas fa-chevron-left"></i>
+                </button>
+                <button class="wish-nav-btn" id="nextWish">
+                    <i class="fas fa-chevron-right"></i>
+                </button>
+            </div>
+        </div>
+        
+        <!-- 页面3：烟花表演 -->
+        <div class="page" id="page3">
+            <div class="fireworks-section">
+                <div class="birthday-message">✨生日快乐✨</div>
+                <canvas id="fireworksCanvas"></canvas>
+            </div>
+        </div>
+    </div>
+    
+    <footer>
+        <p> 愿小乖的每一天都如Hello Kitty般甜美可爱</p>
+    </footer>
+
+    <script>
+        // 页面导航
+        document.querySelectorAll('.nav-btn').forEach(button => {
+            button.addEventListener('click', () => {
+                const pageId = button.getAttribute('data-page');
+                document.querySelectorAll('.page').forEach(page => {
+                    page.classList.remove('active');
+                });
+                document.getElementById(pageId).classList.add('active');
+                
+                // 如果是祝福页，确保第一个祝福是激活状态
+                if(pageId === 'page2') {
+                    resetWishes();
+                }
+            });
+        });
+
+        // 音乐控制
+        const musicControl = document.getElementById('musicControl');
+        // 替换为生日歌（Happy Birthday）
+        let audio = new Audio('https://cdn.pixabay.com/download/audio/2025/06/09/audio_50b8be7252.mp3?filename=happy-birthday-357371.mp3');
+        audio.loop = true;
+        let isPlaying = false;
+
+        // 尝试自动播放音乐（需要用户交互）
+        document.body.addEventListener('click', function initAudio() {
+            if (!isPlaying) {
+                audio.play().then(() => {
+                    isPlaying = true;
+                    musicControl.innerHTML = '<i class="fas fa-pause"></i>';
+                }).catch(e => {
+                    console.log("自动播放被阻止，请手动点击音乐按钮");
+                });
+                document.body.removeEventListener('click', initAudio);
+            }
+        });
+
+        musicControl.addEventListener('click', () => {
+            if (isPlaying) {
+                audio.pause();
+                musicControl.innerHTML = '<i class="fas fa-music"></i>';
+            } else {
+                audio.play();
+                musicControl.innerHTML = '<i class="fas fa-pause"></i>';
+            }
+            isPlaying = !isPlaying;
+        });
+
+        // 装饰元素生成
+        function createFallingElements() {
+            const elements = ['🎀', '🎀', '🌸', '💖', '✨', '🌟', '💫', '🎈', '🎁', '🍰'];
+            
+            setInterval(() => {
+                if (document.querySelectorAll('.falling-element').length < 12) {
+                    const element = document.createElement("div");
+                    element.classList.add("falling-element");
+                    element.textContent = elements[Math.floor(Math.random() * elements.length)];
+                    
+                    element.style.left = Math.random() * 100 + "vw";
+                    element.style.animationDuration = (Math.random() * 5 + 5) + "s";
+                    element.style.fontSize = (Math.random() * 1 + 1.2) + "rem";
+                    element.style.opacity = Math.random() * 0.5 + 0.3;
+                    
+                    document.body.appendChild(element);
+                    
+                    setTimeout(() => {
+                        element.remove();
+                    }, 6000);
+                }
+            }, 500);
+        }
+
+        function createRunningKitties() {
+            const kitties = ['🎀', '👑', '🐱', '💝'];
+            
+            setInterval(() => {
+                if (document.querySelectorAll('.running-kitty').length < 3) {
+                    const kitty = document.createElement("div");
+                    kitty.classList.add("running-kitty");
+                    kitty.textContent = kitties[Math.floor(Math.random() * kitties.length)];
+                    
+                    kitty.style.bottom = (Math.random() * 30 + 5) + "%";
+                    kitty.style.animationDuration = (Math.random() * 5 + 8) + "s";
+                    kitty.style.fontSize = (Math.random() * 0.8 + 1.8) + "rem";
+                    
+                    document.body.appendChild(kitty);
+                    
+                    setTimeout(() => {
+                        kitty.remove();
+                    }, 10000);
+                }
+            }, 3000);
+        }
+
+        // 烟花效果
+        function setupFireworks() {
+            const canvas = document.getElementById('fireworksCanvas');
+            const ctx = canvas.getContext('2d');
+            
+            // 设置canvas尺寸
+            function resizeCanvas() {
+                canvas.width = window.innerWidth;
+                canvas.height = window.innerHeight;
+            }
+            
+            resizeCanvas();
+            window.addEventListener('resize', resizeCanvas);
+            
+            class Firework {
+                constructor(x, y) {
+                    this.x = x;
+                    this.y = y;
+                    this.particles = [];
+                    // 粉色系烟花
+                    const colors = ['#ff9ecb', '#ffafbd', '#ffc2d1', '#ffb7c5', '#f8bbd0'];
+                    const color = colors[Math.floor(Math.random() * colors.length)];
+                    
+                    for (let i = 0; i < 60; i++) {
+                        this.particles.push(new Particle(this.x, this.y, color));
+                    }
+                }
+
+                update() {
+                    this.particles.forEach(particle => particle.update());
+                }
+
+                draw() {
+                    this.particles.forEach(particle => particle.draw());
+                }
+            }
+
+            class Particle {
+                constructor(x, y, color) {
+                    this.x = x;
+                    this.y = y;
+                    this.color = color;
+                    this.angle = Math.random() * 2 * Math.PI;
+                    this.speed = Math.random() * 3 + 1.5;
+                    this.alpha = 1;
+                    this.gravity = 0.04;
+                    this.vx = Math.cos(this.angle) * this.speed;
+                    this.vy = Math.sin(this.angle) * this.speed;
+                    this.size = Math.random() * 2 + 1.5;
+                }
+
+                update() {
+                    this.vx *= 0.97;
+                    this.vy *= 0.97;
+                    this.vy += this.gravity;
+                    this.x += this.vx;
+                    this.y += this.vy;
+                    this.alpha -= 0.01;
+                }
+
+                draw() {
+                    ctx.save();
+                    ctx.globalAlpha = this.alpha;
+                    ctx.fillStyle = this.color;
+                    ctx.beginPath();
+                    ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                    ctx.fill();
+                    ctx.restore();
+                }
+            }
+
+            const fireworks = [];
+
+            function animate() {
+                ctx.fillStyle = 'rgba(10, 10, 25, 0.15)';
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+                
+                fireworks.forEach((firework, index) => {
+                    firework.update();
+                    firework.draw();
+                    if (firework.particles[0].alpha <= 0) {
+                        fireworks.splice(index, 1);
+                    }
+                });
+                
+                requestAnimationFrame(animate);
+            }
+
+            function createRandomFirework() {
+                const x = Math.random() * canvas.width;
+                const y = Math.random() * canvas.height * 0.6;
+                fireworks.push(new Firework(x, y));
+            }
+
+            // 创建初始烟花
+            for (let i = 0; i < 4; i++) {
+                setTimeout(() => {
+                    createRandomFirework();
+                }, i * 800);
+            }
+
+            // 持续添加烟花
+            setInterval(createRandomFirework, 1500);
+            
+            // 触摸添加烟花
+            canvas.addEventListener('touchstart', (event) => {
+                event.preventDefault();
+                const touch = event.touches[0];
+                const x = touch.clientX;
+                const y = touch.clientY;
+                fireworks.push(new Firework(x, y));
+            });
+            
+            // 点击添加烟花
+            canvas.addEventListener('click', (event) => {
+                const x = event.clientX;
+                const y = event.clientY;
+                fireworks.push(new Firework(x, y));
+            });
+
+            animate();
+        }
+        
+        // 祝福卡片切换功能
+        let currentWish = 0;
+        const wishCards = document.querySelectorAll('.wish-card');
+        
+        function showWish(index) {
+            // 移除所有卡片的active类
+            wishCards.forEach(card => {
+                card.classList.remove('active');
+            });
+            
+            // 添加active类到当前卡片
+            wishCards[index].classList.add('active');
+        }
+        
+        function nextWish() {
+            currentWish = (currentWish + 1) % wishCards.length;
+            showWish(currentWish);
+        }
+        
+        function prevWish() {
+            currentWish = (currentWish - 1 + wishCards.length) % wishCards.length;
+            showWish(currentWish);
+        }
+        
+        function resetWishes() {
+            currentWish = 0;
+            showWish(currentWish);
+        }
+        
+        // 绑定祝福导航按钮
+        document.getElementById('nextWish').addEventListener('click', nextWish);
+        document.getElementById('prevWish').addEventListener('click', prevWish);
+        
+        // 添加自动轮播
+        let wishInterval = setInterval(nextWish, 5000);
+        
+        // 当用户手动切换时重置轮播计时器
+        function resetWishInterval() {
+            clearInterval(wishInterval);
+            wishInterval = setInterval(nextWish, 5000);
+        }
+        
+        document.getElementById('nextWish').addEventListener('click', resetWishInterval);
+        document.getElementById('prevWish').addEventListener('click', resetWishInterval);
+
+        // 初始化
+        document.addEventListener('DOMContentLoaded', () => {
+            createFallingElements();
+            createRunningKitties();
+            setupFireworks();
+            
+            // 蛋糕动画结束后添加额外元素
+            document.getElementById('mainCake').addEventListener('animationend', () => {
+                const cake = document.getElementById('mainCake');
+                cake.style.textShadow = "0 0 15px #ff9ecb, 0 0 25px #ffc2d1";
+                cake.style.transition = "text-shadow 1s ease";
+            });
+            
+            // 初始化祝福页
+            resetWishes();
+        });
+    </script>
+</body>
+</html>
